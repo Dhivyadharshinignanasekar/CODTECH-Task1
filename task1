@@ -1,0 +1,190 @@
+CREATE TABLE Students (
+  2  student_id NUMBER PRIMARY KEY,
+  3  first_name VARCHAR2(50),
+  4  last_name VARCHAR2(50),
+  5  email VARCHAR2(100),
+  6  enrollment_date DATE
+  7  );
+
+Table created.
+
+SQL> INSERT INTO Students(student_id,first_name,last_name,email,enrollment_date)VALUES
+  2  (1,'Hari','prakash','hari02@gmail.com',TO_DATE('2024-07-06','YYYY-MM-DD'));
+
+1 row created.
+
+SQL> INSERT INTO Students(student_id,first_name,last_name,email,enrollment_date)VALUES
+  2  (2,'Jeni','Priya','jeni11@gmail.com',TO_DATE('2024-05-05','YYYY-MM-DD'));
+
+1 row created.
+
+SQL> INSERT INTO Students(student_id,first_name,last_name,email,enrollment_date)VALUES
+  2  (3,'Arun','sai','arunsai7@gmail.com',TO_DATE('2024-07-07','YYYY-MM-DD'));
+
+1 row created.
+
+SQL> SET LINESIZE 200;
+SQL> SET PAGESIZE 50;
+SQL> COLUMN student_id FORMAT 999999999;
+SQL> COLUMN first_name FORMAT A15;
+SQL> COLUMN email FORMAT A30;
+SQL> COLUMN last_name FORMAT A15;
+SQL> COLUMN enrollment_date FORMAT A20;
+SQL> SELECT * FROM Students;
+
+STUDENT_ID FIRST_NAME      LAST_NAME       EMAIL                          ENROLLMENT_DATE
+---------- --------------- --------------- ------------------------------ --------------------
+         1 Hari            prakash         hari02@gmail.com               06-JUL-24
+         2 Jeni            Priya           jeni11@gmail.com               05-MAY-24
+         3 Arun            sai             arunsai7@gmail.com             07-JUL-24
+
+SQL> CREATE TABLE Courses (
+  2  course_id NUMBER PRIMARY KEY,
+  3  course_name VARCHAR2(100),
+  4  course_description VARCHAR2(100),
+  5  credits NUMBER
+  6  );
+
+Table created.
+
+SQL> INSERT INTO Courses (course_id,course_name,course_description,credits) VALUES
+  2  (1,'DATA STRUCTURE','DS100',4);
+
+1 row created.
+
+SQL>  INSERT INTO Courses (course_id,course_name,course_description,credits) VALUES
+  2  (2,'DBMS','DB101',3);
+
+1 row created.
+
+SQL> INSERT INTO Courses (course_id,course_name,course_description,credits) VALUES
+  2  (3,'OOPS','IT102',4);
+
+1 row created.
+
+SQL> SELECT * FROM Courses;
+
+ COURSE_ID COURSE_NAME
+---------- ----------------------------------------------------------------------------------------------------
+COURSE_DESCRIPTION                                                                                      CREDITS
+---------------------------------------------------------------------------------------------------- ----------
+         1 DATA STRUCTURE
+DS100                                                                                                         4
+
+         2 DBMS
+DB101                                                                                                         3
+
+         3 OOPS
+IT102                                                                                                         4
+
+
+SQL> SET LINESIZE 200;
+SQL> COLUMN course_name FORMAT A30;
+SQL> COLUMN course_description FORMAT A50;
+SQL> COLUMN credits FORMAT 999;
+SQL> SELECT * FROM Courses;
+
+ COURSE_ID COURSE_NAME                    COURSE_DESCRIPTION                                 CREDITS
+---------- ------------------------------ -------------------------------------------------- -------
+         1 DATA STRUCTURE                 DS100                                                    4
+         2 DBMS                           DB101                                                    3
+         3 OOPS                           IT102                                                    4
+
+SQL> CREATE TABLE Enrollments (
+  2  enrollment_id NUMBER PRIMARY KEY,
+  3  student_id NUMBER NOT NULL,
+  4  course_id NUMBER NOT NULL,
+  5  grade VARCHAR2(2),
+  6  FOREIGN KEY (student_id) REFERENCES Students(student_id),
+  7  FOREIGN KEY (course_id) REFERENCES Courses(course_id)
+  8  );
+
+Table created.
+
+SQL> SET LINESIZE 200;
+SQL> SET PAGESIZE 50;
+SQL> COLUMN enrollment_id FORMAT 999999999;
+SQL> COLUMN student_id FORMAT 999999999;
+SQL> COLUMN course_id FORMAT 999999999;
+SQL> COLUMN grade FORMAT A2;
+SQL> SELECT * FROM Enrollments;
+
+no rows selected
+
+SQL> INSERT INTO Enrollments (enrollment_id,student_id,course_id,grade) VALUES
+  2  (1,1,1,'A');
+
+1 row created.
+
+SQL> INSERT INTO Enrollments (enrollment_id,student_id,course_id,grade) VALUES
+  2  (2,2,2,'B');
+
+1 row created.
+
+SQL> INSERT INTO Enrollments (enrollment_id,student_id,course_id,grade) VALUES
+  2  (3,3,3,'C');
+
+1 row created.
+
+SQL> SELECT * FROM Enrollments;
+
+ENROLLMENT_ID STUDENT_ID  COURSE_ID GR
+------------- ---------- ---------- --
+            1          1          1 A
+            2          2          2 B
+            3          3          3 C
+
+SQL> SELECT * FROM Students;
+
+STUDENT_ID FIRST_NAME      LAST_NAME       EMAIL                          ENROLLMENT_DATE
+---------- --------------- --------------- ------------------------------ --------------------
+         1 Hari            prakash         hari02@gmail.com               06-JUL-24
+         2 Jeni            Priya           jeni11@gmail.com               05-MAY-24
+         3 Arun            sai             arunsai7@gmail.com             07-JUL-24
+
+SQL> SELECT * FROM Courses;
+
+ COURSE_ID COURSE_NAME                    COURSE_DESCRIPTION                                 CREDITS
+---------- ------------------------------ -------------------------------------------------- -------
+         1 DATA STRUCTURE                 DS100                                                    4
+         2 DBMS                           DB101                                                    3
+         3 OOPS                           IT102                                                    4
+
+SQL> SELECT s.first_name,s.last_name,c.course_name,e.grade
+  2  FROM Students s
+  3  JOIN Enrollments e ON s.student_id=e.student_id
+  4  JOIN Courses c ON e.course_id=c.course_id;
+
+FIRST_NAME      LAST_NAME       COURSE_NAME                    GR
+--------------- --------------- ------------------------------ --
+Hari            prakash         DATA STRUCTURE                 A
+Jeni            Priya           DBMS                           B
+Arun            sai             OOPS                           C
+
+SQL> SELECT s.first_name,s.last_name,c.course_name
+  2  FROM Students s
+  3  JOIN Enrollments e ON e.course_id=c.course_id
+  4
+SQL> SELECT s.first_name,s.last_name,c.course_name
+  2  FROM Students s
+  3  JOIN Enrollments e ON s.student_id=e.student_id
+  4  JOIN Courses c ON e.course_id=c.course_id
+  5  WHERE c.course_name='DATA STRUCTURE';
+
+FIRST_NAME      LAST_NAME       COURSE_NAME
+--------------- --------------- ------------------------------
+Hari            prakash         DATA STRUCTURE
+
+SQL> UPDATE Enrollments
+  2  SET grade='A+'
+  3  WHERE student_id=1 AND course_id=1;
+
+1 row updated.
+
+SQL> SELECT * FROM Enrollments;
+
+ENROLLMENT_ID STUDENT_ID  COURSE_ID GR
+------------- ---------- ---------- --
+            1          1          1 A+
+            2          2          2 B
+            3          3          3 C
